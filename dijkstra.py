@@ -77,15 +77,15 @@ def dijkstra(graf, start, koniec, logika):
         wierzcholki_do_przejscia.remove(wezel) # wyrzucamy ten wierzcholek z listy
         
         for wezel_pochodny, pochodny_koszt in graf[wezel].items():  # sprawdzamy wagi krawedzi od wybranego wierzcholka
-            if D[wezel_pochodny] > D[wezel] + pochodny_koszt:       # wybieramy najmniejszy
+            if wezel_pochodny not in przeanalizowane and D[wezel_pochodny] > D[wezel] + pochodny_koszt:       # wybieramy najmniejszy
                 if logika and P[koniec] and D[koniec] < D[wezel] + pochodny_koszt: # na bazie kosztu albo rezygnujemy z analizy tego wierzcholka
                     wierzcholki_do_przejscia.remove(wezel_pochodny)                #albo kontynuujemy analize
                     break
                 else:
                     D[wezel_pochodny] = D[wezel] + pochodny_koszt
                     P[wezel_pochodny] = wezel  # i wstawiamy go do tablicy poprzedników o najmniejszej wadze
-        przeanalizowane.append(wezel) # dodajemy przeanalizowany wierzcholek
-    
+                przeanalizowane.append(wezel)
+
     sciezka = []    # pusta lista po wykonaniu algorytmu wskazujaca najkrotsza sciezke
     wezel = koniec  # zaczniemy wypelnianie najkrotszej sciezki od konca i odpowiednio bedziemy ja wypelniac uzywajac tablicy poprzednikow
     koszt = D[koniec]
@@ -102,7 +102,7 @@ def dijkstra(graf, start, koniec, logika):
             
     sciezka.insert(0, start)
     
-    return sciezka, koszt, przeanalizowane
+    return sciezka, koszt, list(set(przeanalizowane))
 
 def start_aplikacja():
     """
